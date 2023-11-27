@@ -1,16 +1,18 @@
 package middleware
 
 import (
-	"server/src/config"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Core(ctx *gin.Context) {
-	origin := "http://hpyyb.cn"
-	if config.Env.DEVELOPMENT {
-		origin = "*"
-	}
+	// ctx.Header("Access-Control-Allow-Origin", "*")
+	ctx.Header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS, UPDATE")
+	ctx.Header("Access-Control-Allow-Headers", "Content-Type")
+	ctx.Header("Access-Control-Allow-Credentials", "true")
 
-	ctx.Header("Access-Control-Allow-Origin", origin)
+	if ctx.Request.Method == "OPTIONS" {
+		ctx.AbortWithStatus(http.StatusNoContent)
+	}
 }

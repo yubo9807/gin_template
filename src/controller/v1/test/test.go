@@ -1,11 +1,11 @@
 package test
 
 import (
-	"server/src/middleware"
+	"server/src/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Gain(ctx *gin.Context) {
-	middleware.State.Data = "test"
+	service.State.SuccessData(ctx, "success")
 }

@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"bytes"
-	"encoding/json"
+	"fmt"
 	"log"
 	"os"
+	"server/src/service"
 	"server/src/utils"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -26,11 +26,12 @@ func (w responseWriter) Write(body []byte) (int, error) {
 func init() {
 	err := os.Mkdir("logs", 0777)
 	if err != nil {
-		return
+		fmt.Println(err.Error())
 	}
 }
 
 func Logs(ctx *gin.Context) {
+
 	writer := responseWriter{
 		ctx.Writer,
 		bytes.NewBuffer([]byte{}),
@@ -39,32 +40,30 @@ func Logs(ctx *gin.Context) {
 
 	ctx.Next()
 
-	response := writer.body.String()
-	LogsWrite(ctx, "\nResponse: "+response)
+	// response := writer.body.String()
+	LogsWrite(ctx, "")
 }
 
 func LogsWrite(ctx *gin.Context, append string) {
 	filename := utils.DateFormater(time.Now(), "YYYY-MM-DD")
 
 	logSrc := LogsGetSrc("logs/" + filename + ".log")
+	log.SetFlags(log.Lmicroseconds | log.Ldate)
 	log.SetOutput(logSrc)
 	log.SetPrefix("\n")
 
-	header, _ := json.Marshal(ctx.Request.Header)
-	headerStr := strings.ReplaceAll(strings.ReplaceAll(string(header), "\\", ""), "\"\"", "\"")
-	data, _ := json.Marshal(ctx.Request.Body)
+	state := service.State.GetStateStore(ctx)
+	body := string(state.Body)
 
 	log.Println(
-		State.RunTime,
+		state.RunTime,
 		ctx.ClientIP(),
-		"->",
-		ctx.Request.Host,
 		ctx.Request.Method,
 		ctx.Request.RequestURI,
-		"\nData: "+string(data),
-		"\nHeaders: "+headerStr,
+		utils.If(body == "", "", "\nbody:"+body),
 		append,
 	)
+
 }
 
 func LogsGetSrc(filename string) *os.File {

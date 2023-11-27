@@ -2,6 +2,7 @@
 .git
 .idea
 .vscode
+config.yml
 
 logs
 server
