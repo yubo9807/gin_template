@@ -17,8 +17,7 @@ func server() *gin.Engine {
 
 	// 代理应用
 	power := app.Group("/permissions")
-	power.Use(middleware.BodyDispose)
-	power.Use(middleware.Authorization)
+	power.Use(middleware.ProxyAuthorization)
 	power.Any("/*path", middleware.ProxyPermissions)
 
 	// 自身应用

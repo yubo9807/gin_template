@@ -18,7 +18,6 @@ func Authorization(ctx *gin.Context) {
 	info, err := service.Jwt.Verify(auth)
 	if err != nil {
 		service.State.ErrorCustom(ctx, err.Error())
-		ctx.Abort()
 		return
 	}
 	ctx.Set(KEY, info)
