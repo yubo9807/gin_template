@@ -14,6 +14,10 @@ func server() *gin.Engine {
 	app := gin.Default()
 	app.Use(middleware.Core)
 
+	// 代理应用
+	app.Any("/permissions/*path", middleware.ProxyPermissions)
+
+	// 自身应用
 	base := app.Group(configs.Config.Prefix)
 	base.Use(middleware.Recover)
 	base.Use(middleware.Logs)
