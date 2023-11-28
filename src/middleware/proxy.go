@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"server/src/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +12,7 @@ import (
 func ProxyPermissions(ctx *gin.Context) {
 	targetURL, err := url.Parse("http://localhost:20020/")
 	if err != nil {
-		ctx.String(http.StatusInternalServerError, "Failed to parse target URL")
+		service.State.ErrorCustom(ctx, err.Error())
 		return
 	}
 

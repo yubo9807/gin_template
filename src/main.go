@@ -2,6 +2,7 @@ package main
 
 import (
 	"server/configs"
+	"server/src/controller/basic"
 	v1 "server/src/controller/v1"
 	"server/src/middleware"
 	"strconv"
@@ -15,7 +16,10 @@ func server() *gin.Engine {
 	app.Use(middleware.Core)
 
 	// 代理应用
-	app.Any("/permissions/*path", middleware.ProxyPermissions)
+	power := app.Group("/permissions")
+	power.Use(middleware.BodyDispose)
+	power.Use(middleware.Authorization)
+	power.Any("/*path", middleware.ProxyPermissions)
 
 	// 自身应用
 	base := app.Group(configs.Config.Prefix)
@@ -24,6 +28,7 @@ func server() *gin.Engine {
 	base.Use(middleware.BodyDispose)
 	base.Use(middleware.Timeout)
 
+	basic.Route(base.Group("/basic/api"))
 	v1.Route(base.Group("/v1/api"))
 
 	return app
