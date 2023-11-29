@@ -41,8 +41,11 @@ func Logs(ctx *gin.Context) {
 
 	ctx.Next()
 
-	// response := writer.body.String()
-	LogsWrite(ctx, "")
+	response := ""
+	if service.State.GetStateStore(ctx).Code != 200 {
+		response = "\nresponse: " + writer.body.String()
+	}
+	LogsWrite(ctx, response)
 }
 
 func LogsWrite(ctx *gin.Context, append string) {
