@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"server/src/service"
 	"server/src/utils"
 	"time"
@@ -53,7 +54,9 @@ func LogsWrite(ctx *gin.Context, append string) {
 	log.SetPrefix("\n")
 
 	state := service.State.GetStateStore(ctx)
-	body := string(state.Body)
+
+	reg := regexp.MustCompile(" |\n")
+	body := reg.ReplaceAllString(state.Body, "")
 
 	log.Println(
 		state.RunTime,
