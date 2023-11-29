@@ -6,5 +6,5 @@
 
 ## 启动
 
-- 启动： `go run src/server.go dev`
-- 打包： `go build src/server.go`
+- 启动： `./scripts/dev.sh`
+- 打包： `./scripts/build.sh`
