@@ -1,11 +1,11 @@
 package router
 
 import (
-	"server/src/controller/login"
+	"server/src/controller/user"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Basic(r *gin.RouterGroup) {
-	r.POST("/login", login.SignIn)
+	r.POST("/login", user.SignIn)
 }

@@ -10,7 +10,6 @@ import (
 
 func formatResult(ctx *gin.Context, code int, msg string) {
 	ctx.JSON(200, gin.H{"code": code, "message": msg})
-	ctx.Abort()
 }
 
 // 代理前权限认证
@@ -20,9 +19,14 @@ func ProxyAuthorization(ctx *gin.Context) {
 		formatResult(ctx, 401, "unauthorized")
 		return
 	}
-	_, err := service.Jwt.Verify(auth)
+	info, err := service.Jwt.Verify(auth)
 	if err != nil {
 		formatResult(ctx, 401, err.Error())
+		return
+	}
+	// 不是管理员，不允许操作
+	if info["roleId"] != 0 {
+		formatResult(ctx, 500, "The current user has no permission")
 		return
 	}
 }

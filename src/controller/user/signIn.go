@@ -1,4 +1,4 @@
-package login
+package user
 
 import (
 	"server/src/service"
@@ -19,6 +19,7 @@ func SignIn(ctx *gin.Context) {
 	}
 
 	info := map[string]interface{}{
+		"roleId":   0,
 		"username": params.Username,
 		"password": params.Password,
 	}
