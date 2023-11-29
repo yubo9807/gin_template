@@ -6,6 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Gain(ctx *gin.Context) {
+func Test(ctx *gin.Context) {
 	service.State.SuccessData(ctx, "success")
 }

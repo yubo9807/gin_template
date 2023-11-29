@@ -69,6 +69,7 @@ func (s *stateType) Result(ctx *gin.Context) {
 		"message": store.Message,
 		"runTime": store.RunTime,
 	})
+	ctx.Abort()
 }
 
 // 请求成功，并返回数据

@@ -10,6 +10,7 @@ import (
 
 func formatResult(ctx *gin.Context, code int, msg string) {
 	ctx.JSON(200, gin.H{"code": code, "message": msg})
+	ctx.Abort()
 }
 
 // 代理前权限认证

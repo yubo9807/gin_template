@@ -1,4 +1,4 @@
-package basic
+package login
 
 import (
 	"server/src/service"
