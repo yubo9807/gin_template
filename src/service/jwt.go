@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	"server/configs"
 	"server/src/utils"
 	"time"
 
@@ -19,7 +20,7 @@ var secret = "lifby9m2"
 func (j *jwtType) Publish(info map[string]interface{}) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"info": info,
-		"exp":  time.Now().Add(time.Hour * 2).Unix(),
+		"exp":  time.Now().Unix() + configs.Config.TokenValidTime,
 		"iss":  "power-system",
 	})
 	tokenString, _ := token.SignedString([]byte(secret))

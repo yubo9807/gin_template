@@ -18,10 +18,13 @@ func SignIn(ctx *gin.Context) {
 		return
 	}
 
+	// 验证用户名密码
+
+	// 将一些重要信息存在 token 中
 	info := map[string]interface{}{
 		"roleId":   0,
+		"userId":   0,
 		"username": params.Username,
-		"password": params.Password,
 	}
 	token := service.Jwt.Publish(info)
 	service.State.SuccessData(ctx, token)

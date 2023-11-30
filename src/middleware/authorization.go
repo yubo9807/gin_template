@@ -11,14 +11,19 @@ const KEY = "user_info"
 func Authorization(ctx *gin.Context) {
 	auth := ctx.GetHeader("Authorization")
 	if auth == "" {
-		service.State.ErrorUnauthorized(ctx)
+		service.State.ErrorUnauthorized(ctx, "Unauthorized")
 		ctx.Abort()
 		return
 	}
 
 	info, err := service.Jwt.Verify(auth)
 	if err != nil {
-		service.State.ErrorCustom(ctx, err.Error())
+		if err.Error() == "Token is expired" {
+			// 可尝试刷新 token
+			service.State.ErrorTokenFailure(ctx)
+		} else {
+			service.State.ErrorUnauthorized(ctx, err.Error())
+		}
 		ctx.Abort()
 		return
 	}

@@ -8,4 +8,5 @@ import (
 
 func Basic(r *gin.RouterGroup) {
 	r.POST("/login", user.SignIn)
+	r.POST("/token/refresh", user.RefreshToken)
 }
