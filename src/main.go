@@ -16,7 +16,9 @@ func server() *gin.Engine {
 
 	// 代理应用
 	power := app.Group("/permissions")
-	power.Use(middleware.ProxyAuthorization)
+	power.Use(middleware.BodyDispose)
+	power.Use(middleware.Authorization)
+	power.Use(middleware.RoleVerify("0")) // 指定特定的角色可以调以下接口
 	power.Any("/*path", middleware.ProxyPermissions)
 
 	// 自身应用
@@ -24,7 +26,6 @@ func server() *gin.Engine {
 	base.Use(middleware.Recover)
 	base.Use(middleware.Logs)
 	base.Use(middleware.BodyDispose)
-	base.Use(middleware.Timeout)
 
 	router.Basic(base.Group("/basic/api"))
 	router.V1(base.Group("/v1/api"))

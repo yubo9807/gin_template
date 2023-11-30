@@ -35,3 +35,14 @@ func GetTokenInfo(ctx *gin.Context) map[string]interface{} {
 	info, _ := ctx.Get(KEY)
 	return info.(map[string]interface{})
 }
+
+// 角色校验
+func RoleVerify(roleId string) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		info := GetTokenInfo(ctx)
+		if info["roleId"] != roleId {
+			service.State.ErrorCustom(ctx, "The current user has no permission")
+			return
+		}
+	}
+}

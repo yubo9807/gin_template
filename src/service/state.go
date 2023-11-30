@@ -42,7 +42,7 @@ func (s *stateType) InitState(ctx *gin.Context) {
 
 	store := &storeType{
 		Code:      400,
-		Message:   "Unknown error",
+		Message:   "unknown error",
 		startTime: time.Now(),
 		Body:      string(data),
 	}
@@ -76,19 +76,20 @@ func (s *stateType) Result(ctx *gin.Context) {
 func (s *stateType) SuccessData(ctx *gin.Context, data interface{}) {
 	store := getStore(ctx)
 	store.Code = 200
-	store.Message = "Success"
+	store.Message = "success"
 	store.Data = data
 }
 
 // 请求成功
 func (s *stateType) Success(ctx *gin.Context) {
-	s.SuccessData(ctx, "Success")
+	s.SuccessData(ctx, "success")
 }
 
 func errorParams(ctx *gin.Context, code int, msg string) {
 	store := getStore(ctx)
 	store.Code = code
 	store.Message = msg
+	ctx.Abort()
 }
 
 // 未授权
@@ -98,17 +99,17 @@ func (s *stateType) ErrorUnauthorized(ctx *gin.Context, msg string) {
 
 // token 失效，重新刷新 token
 func (s *stateType) ErrorTokenFailure(ctx *gin.Context) {
-	errorParams(ctx, 405, "Token is expired")
+	errorParams(ctx, 405, "token is expired")
 }
 
 // 参数错误
 func (s *stateType) ErrorParams(ctx *gin.Context) {
-	errorParams(ctx, 406, "Params error")
+	errorParams(ctx, 406, "params error")
 }
 
 // 请求超时
 func (s *stateType) ErrorConnectTimeout(ctx *gin.Context) {
-	errorParams(ctx, 504, "Connect timeout")
+	errorParams(ctx, 504, "connect timeout")
 }
 
 // 自定义错误消息

@@ -22,8 +22,8 @@ func SignIn(ctx *gin.Context) {
 
 	// 将一些重要信息存在 token 中
 	info := map[string]interface{}{
-		"roleId":   0,
-		"userId":   0,
+		"roleId":   "0",
+		"userId":   "0",
 		"username": params.Username,
 	}
 	token := service.Jwt.Publish(info)
