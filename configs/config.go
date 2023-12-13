@@ -17,11 +17,11 @@ type ConfigType struct {
 var Config ConfigType
 
 const template = `
-prefix: "/baseUrl"  # 路由前缀
-port: 8080  # 启动端口
+prefix: "/trail"  # 路由前缀
+port: 9528  # 启动端口
 
 tokenValidTime: 7200  # 令牌有效时间(s)
-TokenExceedRefreshTime: 86400  # 令牌超过刷新时间(s)
+tokenExceedRefreshTime: 86400  # 令牌超过刷新时间(s)
 `
 
 func init() {
