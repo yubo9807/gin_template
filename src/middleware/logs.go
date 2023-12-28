@@ -3,11 +3,15 @@ package middleware
 import (
 	"bytes"
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
+	"server/configs"
 	"server/src/service"
 	"server/src/utils"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -48,6 +52,7 @@ func Logs(ctx *gin.Context) {
 	LogsWrite(ctx, response)
 }
 
+// 写入日志
 func LogsWrite(ctx *gin.Context, append string) {
 	filename := utils.DateFormater(time.Now(), "YYYY-MM-DD")
 
@@ -72,12 +77,34 @@ func LogsWrite(ctx *gin.Context, append string) {
 
 }
 
+// 获取日志文件路径
 func LogsGetSrc(filename string) *os.File {
 	src, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	logSrc := src
 	if err != nil {
 		src, _ := os.Create(filename)
 		logSrc = src
+		go clearLogs()
 	}
 	return logSrc
+}
+
+// 清理日志
+func clearLogs() {
+	flag := time.Now().AddDate(0, 0, -configs.Config.LogReserveTime).Unix()
+	filepath.Walk("logs", func(path string, info fs.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+		if !strings.HasSuffix(path, ".log") {
+			return nil
+		}
+
+		name := strings.Split(info.Name(), ".")[0]
+		t, _ := time.Parse("2006-01-02", name)
+		if t.Unix() < flag {
+			os.Remove(path)
+		}
+		return nil
+	})
 }
